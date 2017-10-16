@@ -9,6 +9,16 @@
   </head>
 
   <body>
+    <header>
+      <h1>Ada Books!</h1>
+      <p>
+        <% if @user %>
+          <%= "Welcome #{@user.name}" %>
+        <% else %>
+          <%=  link_to "Log in With Github", "/auth/github" %>
+        <% end %>
+      </p>
+    </header>
     <section class="flash">
       <% flash.each do |name, message| %>
         <div class="<%= name %>"><%= message %></div>
