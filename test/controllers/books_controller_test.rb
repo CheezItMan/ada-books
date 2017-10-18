@@ -24,6 +24,19 @@ class BooksControllerTest < ActionDispatch::IntegrationTest
       must_respond_with :success
     end
 
+
+    it "should respond with 404 if it's not found" do
+      # Arrange
+      books(:book_one).destroy()
+
+      # Act
+      get book_path( books(:book_one).id )
+
+      # Assert
+      must_respond_with :not_found
+    end
+
+
     it "should be able to successfully create a book" do
       proc {
         post books_path, params: { book: { title: "New Title", author_id: authors(:italo_calvino).id } }
@@ -31,6 +44,15 @@ class BooksControllerTest < ActionDispatch::IntegrationTest
 
       must_respond_with :redirect
       must_redirect_to root_path
+    end
+
+
+    it "should rerender the form if it can't create the book" do
+      proc {
+        post books_path, params: { book: { author_id: authors(:italo_calvino).id } }
+      }.must_change 'Book.count', 0
+
+      must_respond_with :success
     end
 
     it "should be able to successfully update a book title" do

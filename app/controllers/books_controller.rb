@@ -13,6 +13,9 @@ class BooksController < ApplicationController
   end
 
   def show
+    unless @book
+      render_404
+    end
   end
 
   def edit
@@ -56,6 +59,10 @@ class BooksController < ApplicationController
 
   def find_book
     @book = Book.find_by(id: params[:id])
+  end
+
+  def render_404
+    render file: "/public/404.html", status: 404
   end
 
   def book_params
