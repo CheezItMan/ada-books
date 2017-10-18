@@ -1,8 +1,5 @@
 class BooksController < ApplicationController
-
-  # BOOKS = [{id: 1, title: "Object Oriented Design in Ruby", author: "Sandy Metz"},
-  #   {id: 2, title: "Harry Potter and the Goblet of Fire", author: "JK Rowling"},
-  #   {id: 3, title: "The Girl with the Dragon Tatoo", author: "Stieg Larsson"}]
+  before_action :find_book, only: [:show, :edit, :update, :destroy]
 
   def index
     # if genre_id on params is truthy
@@ -16,28 +13,15 @@ class BooksController < ApplicationController
   end
 
   def show
-
-    @book = Book.find( params[:id].to_i )
-
-    # id = params[:id].to_i
-    # @book = nil
-    # BOOKS.each do |book|
-    #   if book[:id] == id
-    #     @book = book
-    #   end
-    # end
   end
 
   def edit
-    @book = Book.find_by(id: params[:id])
-
     unless @book
       redirect_to root_path
     end
   end
 
   def update
-    @book = Book.find_by(id: params[:id])
     redirect_to books_path unless @book
 
     if @book.update_attributes book_params
@@ -46,8 +30,6 @@ class BooksController < ApplicationController
       render :edit
     end
   end
-
-
 
   def new
     @book = Book.new
@@ -65,15 +47,19 @@ class BooksController < ApplicationController
   end
 
   def destroy
-    Book.find_by(id: params[:id]).destroy
+    @book.destroy
 
     redirect_to root_path
   end
 
   private
 
-    def book_params
-      return params.require(:book).permit(:title, :author_id, :description, :price)
-    end
+  def find_book
+    @book = Book.find_by(id: params[:id])
+  end
+
+  def book_params
+    return params.require(:book).permit(:title, :author_id, :description, :price)
+  end
 
 end
