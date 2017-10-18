@@ -4,6 +4,42 @@ class BooksControllerTest < ActionDispatch::IntegrationTest
 
   describe "BooksController" do
 
+    describe "Authenticated Users" do
+
+     it "Allows authenticated users to edit a book" do
+
+
+      user = users(:kari)
+
+      log_in(user, :github)
+
+      get edit_book_path(Book.first.id)
+
+      must_respond_with :success
+
+
+
+     end
+
+    end
+
+    describe "Guest User " do
+
+      it "Does not allow guest users to edit a book" do
+
+       # Action
+       get edit_book_path(Book.first.id)
+
+       # Assert
+       must_respond_with :redirect
+       must_redirect_to root_path
+
+
+
+      end
+    end
+
+
     it "going to the books index page is successful" do
       # Arrange
 
